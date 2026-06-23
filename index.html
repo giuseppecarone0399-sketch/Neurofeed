@@ -4,162 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Neurofeed</title>
-    <!-- FontAwesome per le icone della barra di navigazione e dei box -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        :root { 
-            --p: #004a99; 
-            --s: #002e62; 
-            --bg: #f4f7f6; 
-            --w: #ffffff; 
-            --t: #333333; 
-            --g: #666666; 
-            --border: #cccccc; 
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f4f8; color: var(--t); line-height: 1.5; padding-bottom: 40px; }
-        
-        /* TESTATA BLU SOPRA LA BARRA DELLE SEZIONI */
-        .app-title-container { 
-            background: var(--p); 
-            padding: 16px 15px; 
-            text-align: center; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-        }
-        .app-title-container i { font-size: 24px; color: var(--w); }
-        .app-title-container h1 { font-size: 22px; font-weight: 700; color: var(--w); letter-spacing: 0.5px; }
-        
-        /* BARRA DELLE SEZIONI (MANTENUTA ESATTAMENTE SOTTO LA TESTATA) */
-        .top-nav { 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            display: flex; 
-            background: var(--p); 
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; 
-            border-top: 1px solid rgba(255,255,255,0.1); 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-        .top-nav::-webkit-scrollbar { display: none; }
-        .nav-item { 
-            flex: 1; 
-            min-width: 75px; 
-            padding: 12px 2px; 
-            text-align: center; 
-            color: rgba(255,255,255,0.6); 
-            text-decoration: none; 
-            font-size: 11px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 4px; 
-        }
-        .nav-item i { font-size: 18px; }
-        .nav-item.active { color: var(--w); font-weight: bold; background: rgba(255,255,255,0.15); }
-        
-        /* STRUTTURA CONTENUTO E SCHEDE (DA IMMAGINI) */
+        :root { --p: #004a99; --bg: #f0f4f8; --w: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); padding-bottom: 40px; }
+        .app-title-container { background: var(--p); padding: 16px; text-align: center; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .top-nav { position: sticky; top: 0; z-index: 100; display: flex; background: var(--p); overflow-x: auto; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .nav-item { flex: 1; min-width: 75px; padding: 12px 5px; text-align: center; color: rgba(255,255,255,0.6); font-size: 11px; text-decoration: none; }
+        .nav-item.active { color: white; background: rgba(255,255,255,0.15); font-weight: bold; }
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .section { display: none; }
         .section.active { display: block; }
+        .card { background: var(--w); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h2 { font-size: 17px; color: var(--p); margin-bottom: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 8px; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px; }
+        .btn-next { background: var(--p); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; text-transform: uppercase; }
         
-        .card { 
-            background: var(--w); 
-            border-radius: 16px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-        }
-        
-        /* TITOLI SEZIONI COPIATI DALLE IMMAGINI */
-        .card h2 { 
-            font-size: 17px; 
-            color: #004a99; 
-            margin-bottom: 16px; 
-            text-transform: uppercase; 
-            font-weight: 700;
-            border-bottom: 1px solid #edf2f7;
-            padding-bottom: 8px;
-        }
-        
-        /* BOX INFO SFONDATI (VERDE, GRIGIO, AZZURRO DELLE FOTO) */
-        .info-box { padding: 12px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.4; }
-        .info-box.gray { background: #f8f9fa; border-left: 4px solid #6c757d; color: #333; }
-        .info-box.green { background: #f4faf6; border-left: 4px solid #28a745; color: #2b5a36; }
-        .info-box.blue { background: #f0f6fc; border: 1px dashed #b6d4fe; border-radius: 12px; color: #1e3a60; position: relative; }
-        
-        .info-box.green strong { color: #28a745; }
-        
-        /* COMPONENTI DI FORM */
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #444444; }
-        
-        /* SELECT COMPLETAMENTE PERSONALIZZATE E SVUOTATE DI DEFAULT */
-        select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            font-size: 14px; 
-            background-color: var(--w); 
-            color: var(--t); 
-            outline: none; 
-            -webkit-appearance: none; 
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>"); 
-            background-repeat: no-repeat; 
-            background-position: right 12px center; 
-            background-size: 16px; 
-            padding-right: 40px; 
-        }
-        
-        /* BOTTONI DI CAMBIO SEZIONE COPIATI DA IMMAGINI */
-        .btn-next { 
-            background: #004a99; 
-            color: var(--w); 
-            border: none; 
-            width: 100%; 
-            padding: 15px; 
-            border-radius: 8px; 
-            font-size: 14px; 
-            font-weight: bold; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            text-transform: uppercase;
-            cursor: pointer; 
-            box-shadow: 0 4px 6px rgba(0,74,153,0.15); 
-        }
-        .btn-reset {
-            background: #5a6268;
-            color: var(--w);
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
+        /* BOX ESITO COLORATI */
+        .esito-box { padding: 20px; border-radius: 12px; color: white; font-weight: bold; text-align: center; margin-bottom: 15px; font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <!-- 1. NEUROFEED CON ICONA DEL CERVELLO STILIZZATO (SOPRA LA BARRA) -->
     <div class="app-title-container">
-        <i class="fa-solid fa-brain"></i>
-        <h1>Neurofeed</h1>
+        <i class="fa-solid fa-brain"></i><h1>Neurofeed</h1>
     </div>
 
-    <!-- 2. BARRA DELLE VARIE SEZIONI (INTEGRA E NON TOCCATA) -->
     <div class="top-nav">
         <a href="#" class="nav-item active" id="tab-predisponenti" onclick="switchTab('predisponenti')"><i class="fa-solid fa-history"></i><span>Predisponenti</span></a>
         <a href="#" class="nav-item" id="tab-preop" onclick="switchTab('preop')"><i class="fa-solid fa-folder-plus"></i><span>Pre-Op</span></a>
@@ -169,300 +40,57 @@
     </div>
 
     <div class="container">
-        
-        <!-- SEZIONE 1: FATTORI PREDISPONENTI (image_12.png) -->
-        <div id="predisponenti" class="section active">
-            <div class="card">
-                <h2>1. Fattori Predisponenti</h2>
-                <div class="info-box gray">
-                    Anamnesi generale e fattori di rischio intrinseci del paziente.
-                </div>
-                
-                <div class="form-group">
-                    <label>Età del paziente:</label>
-                    <select id="p_eta">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Inferiore a 65 anni (Punti: 0)</option>
-                        <option value="1">Uguale o superiore a 65 anni (Punti: 1)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Comorbilità neurologiche / pregresse:</label>
-                    <select id="p_comorbilita">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Nessuna comorbilità rilevante (Punti: 0)</option>
-                        <option value="1">Ictus / TIA pregresso / Decadimento cognitivo (Punti: 1)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Sito / Localizzazione della lesione cerebrale:</label>
-                    <select id="p_lesione">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Aree non eloquenti o emisfero destro (Punti: 0)</option>
-                        <option value="2">Frontale / Temporale sinistro - Aree eloquenti (Punti: 2)</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn-next" onclick="switchTab('preop')">Prossimo: Sezione Preoperatorio &nbsp;<i class="fa-solid fa-arrow-right"></i></button>
-        </div>
+        <div id="predisponenti" class="section active"><div class="card"><h2>1. Fattori Predisponenti</h2><select id="p_eta"><option value="">Età</option><option value="0"> < 65</option><option value="1"> >= 65</option></select><select id="p_comorbilita"><option value="">Comorbilità</option><option value="0">No</option><option value="1">Sì</option></select></div><button class="btn-next" onclick="switchTab('preop')">Avanti</button></div>
+        <div id="preop" class="section"><div class="card"><h2>2. Pre-Op</h2><select id="pre_deglutizione"><option value="">Stato basale</option><option value="0">Normale</option><option value="2">Disfagia</option></select></div><button class="btn-next" onclick="switchTab('postop')">Avanti</button></div>
+        <div id="postop" class="section"><div class="card"><h2>3. Post-Op</h2><select id="post_edema"><option value="">Edema</option><option value="0">Assente</option><option value="2">Presente</option></select></div><button class="btn-next" onclick="switchTab('bsa')">Avanti</button></div>
+        <div id="bsa" class="section"><div class="card"><h2>BSA Scale</h2><select id="bsa_1"><option value="1">Vigile</option><option value="0">Soporoso</option></select><select id="bsa_2"><option value="1">Tronco ok</option><option value="0">Deficit</option></select></div><button class="btn-next" onclick="calcolaRisultato()">GENERA ESITO</button></div>
 
-        <!-- SEZIONE 2: VALUTAZIONE PREOPERATORIA (image_11.png) -->
-        <div id="preop" class="section">
-            <div class="card">
-                <h2>2. Valutazione Preoperatoria</h2>
-                
-                <div class="info-box green">
-                    <strong><i class="fa-solid fa-users"></i> VALUTAZIONE MULTIDISCIPLINARE (Pre-Op):</strong><br>
-                    • <strong>Neurochirurgo:</strong> Inquadramento della lesione e pianificazione dei mapping intraoperatori.<br>
-                    • <strong>Logopedista:</strong> Bilancio funzionale basale della deglutizione e del linguaggio.<br>
-                    • <strong>ORL:</strong> Esame clinico obiettivo e laringoscopia per escludere alterazioni strutturali e deficit pre-esistenti.
-                </div>
-
-                <div class="form-group">
-                    <label>Stato deglutitorio basale (Clinico):</label>
-                    <select id="pre_deglutizione">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Deglutizione perfettamente normale (Punti: 0)</option>
-                        <option value="2">Disfagia lieve o saltuaria pre-esistente (Punti: 2)</option>
-                    </select>
-                </div>
-
-                <div class="info-box blue">
-                    <strong><i class="fa-solid fa-cloud"></i> Informazioni per il Paziente (Awake Surgery):</strong><br>
-                    "Prima dell'intervento faremo dei semplici esercizi insieme per conoscere la tua deglutizione. Durante l'operazione sarai sveglio e ti chiederemo di muovere la lingua o deglutire: questo serve a proteggere in modo sicuro e preciso tutte le tue funzioni biologiche naturali."
-                </div>
-            </div>
-            <button class="btn-next" onclick="switchTab('postop')">Prossimo: Sezione Postoperatorio &nbsp;<i class="fa-solid fa-arrow-right"></i></button>
-        </div>
-
-        <!-- SEZIONE 3: DECORSO POSTOPERATORIO (image_13.png) -->
-        <div id="postop" class="section">
-            <div class="card">
-                <h2>3. Decorso Postoperatorio</h2>
-                <div class="info-box gray">
-                    Monitoraggio clinico immediato e complicanze legate all'atto chirurgico.
-                </div>
-
-                <div class="form-group">
-                    <label>Presenza di edema peri-lesionale o complicanze chirurgiche:</label>
-                    <select id="post_edema">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Assente o minimo (Punti: 0)</option>
-                        <option value="2">Edema marcato / Complicanze chirurgiche rilevate (Punti: 2)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Livello di Fatigue / Collaboration post-chirurgica:</label>
-                    <select id="post_fatigue">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="0">Paziente collaborante e attivo (Punti: 0)</option>
-                        <option value="1">Grave fatigue / Scarsa collaborazione (Punti: 1)</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn-next" onclick="switchTab('bsa')">Prossimo: Valutazione Bedside (BSA) &nbsp;<i class="fa-solid fa-arrow-right"></i></button>
-        </div>
-
-        <!-- SEZIONE 4: BEDSIDE SWALLOW ASSESSMENT (image_14.png) -->
-        <div id="bsa" class="section">
-            <div class="card">
-                <h2>Bedside Swallow Assessment (BSA)</h2>
-                
-                <div class="form-group">
-                    <label>Livello di coscienza:</label>
-                    <select id="bsa_1">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Vigile (Punti: 1)</option>
-                        <option value="0">Non vigile / Soporoso (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Controllo del tronco e della testa:</label>
-                    <select id="bsa_2">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Tronco normale (Punti: 1)</option>
-                        <option value="0">Deficitario / Instabile (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Chiusura delle labbra:</label>
-                    <select id="bsa_3">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Normale (Punti: 1)</option>
-                        <option value="0">Incompleta / Asimmetrica (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Riflesso della tosse:</label>
-                    <select id="bsa_4">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Normale (Punti: 1)</option>
-                        <option value="0">Assente o debole (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div style="font-size: 13px; font-weight: bold; color: var(--g); margin: 15px 0 10px 0; border-bottom: 1px solid #ddd; padding-bottom: 3px;">
-                    Stadio 1: Prova del Cucchiaino (3x 5ml Acqua)
-                </div>
-
-                <div class="form-group">
-                    <label>Tosse durante la deglutizione al cucchiaino:</label>
-                    <select id="bsa_5">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Mai o una volta (Punti: 1)</option>
-                        <option value="0">Sì / Più volte (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Gorgoglio dopo la deglutizione (Voce umida):</label>
-                    <select id="bsa_6">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="2">No (Punti: 2)</option>
-                        <option value="0">Sì (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Funzione laringea dopo la deglutizione:</label>
-                    <select id="bsa_7">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Normale (Punti: 1)</option>
-                        <option value="0">Alterata (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div style="font-size: 13px; font-weight: bold; color: var(--g); margin: 15px 0 5px 0;">
-                    Stadio 2: Prova con Bicchiere (60ml Acqua)
-                </div>
-                <div style="font-size: 11px; color: var(--g); margin-bottom: 12px; font-style: italic;">
-                    *Eseguire solo se lo Stadio 1 è risultato superato o sicuro.
-                </div>
-
-                <div class="form-group">
-                    <label>È in grado di terminare la prova al bicchiere?</label>
-                    <select id="bsa_8">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">Sì (Punti: 1)</option>
-                        <option value="0">No (Punti: 0)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Tosse durante o dopo il bicchiere:</label>
-                    <select id="bsa_9">
-                        <option value="">-- Seleziona un'opzione --</option>
-                        <option value="1">No (Punti: 1)</option>
-                        <option value="0">Sì (Punti: 0)</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn-next" onclick="calcolaRisultato()">Genera Risultato Clinico &nbsp;<i class="fa-solid fa-square-poll-vertical"></i></button>
-        </div>
-
-        <!-- SEZIONE 5: ESITO (image_15.png) -->
         <div id="esito" class="section">
             <div class="card">
-                <h2>Punteggio Totale Integrato</h2>
-                <div id="box-punteggio" style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; font-weight: bold; font-size: 16px; border: 1px solid #ddd;">
-                    In attesa del calcolo dei dati...
-                </div>
+                <h2>Esito Clinico</h2>
+                <div id="box-esito" class="esito-box">Attendi calcolo...</div>
+                <div id="piano-multidisciplinare" style="font-size: 14px; line-height: 1.6;"></div>
             </div>
-
-            <div class="card">
-                <h2>Piano di Gestione Clinica Multidisciplinare</h2>
-                <div id="box-piano" style="font-size: 13.5px; color: #333; line-height: 1.5;">
-                    Compila tutti i campi dei precedenti passaggi per visualizzare le indicazioni cliniche dettagliate per l'équipe.
-                </div>
-            </div>
-
-            <div class="card" style="background: #fffdf3; border: 1px solid #ffeeba; border-radius: 12px;">
-                <h2 style="color: #856404; border-bottom-color: #ffe8a1;"><i class="fa-solid fa-handshake"></i> Consigli per il Paziente e Caregiver</h2>
-                <div id="box-consigli" style="font-size: 13.5px; color: #856404; line-height: 1.5;">
-                    Linee guida pratiche post-operatorie fornite sulla base della valutazione eseguita.
-                </div>
-            </div>
-
-            <button class="btn-reset" onclick="resetForm()"><i class="fa-solid fa-rotate"></i> Resetta e Comincia Nuovo Screening</button>
+            <button class="btn-next" onclick="resetForm()">RICOMINCIA</button>
         </div>
-
     </div>
 
     <script>
-        // Gestione delle Tab e sincronizzazione corretta dell'interfaccia
-        function switchTab(tabId) {
+        function switchTab(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('tab-' + tabId).classList.add('active');
-            window.scrollTo(0, 0);
+            document.getElementById(id).classList.add('active');
         }
 
-        // Calcolo logico dei punteggi integrati derivanti dalle sezioni cliniche
         function calcolaRisultato() {
-            // Sezione fattori clinici di rischio
-            let eta = parseInt(document.getElementById('p_eta').value) || 0;
-            let com = parseInt(document.getElementById('p_comorbilita').value) || 0;
-            let les = parseInt(document.getElementById('p_lesione').value) || 0;
-            let deg = parseInt(document.getElementById('pre_deglutizione').value) || 0;
-            let ede = parseInt(document.getElementById('post_edema').value) || 0;
-            let fat = parseInt(document.getElementById('post_fatigue').value) || 0;
-            
-            let rischioTotale = eta + com + les + deg + ede + fat;
+            let tot = (parseInt(document.getElementById('p_eta').value) || 0) + 
+                      (parseInt(document.getElementById('p_comorbilita').value) || 0) +
+                      (parseInt(document.getElementById('pre_deglutizione').value) || 0) +
+                      (parseInt(document.getElementById('post_edema').value) || 0) +
+                      (parseInt(document.getElementById('bsa_1').value) || 0) +
+                      (parseInt(document.getElementById('bsa_2').value) || 0);
 
-            // Scala BSA Bedside
-            let b1 = document.getElementById('bsa_1').value;
-            let b2 = document.getElementById('bsa_2').value;
-            let b3 = document.getElementById('bsa_3').value;
-            let b4 = document.getElementById('bsa_4').value;
-            let b5 = document.getElementById('bsa_5').value;
-            let b6 = document.getElementById('bsa_6').value;
-            let b7 = document.getElementById('bsa_7').value;
-            let b8 = document.getElementById('bsa_8').value;
-            let b9 = document.getElementById('bsa_9').value;
+            let box = document.getElementById('box-esito');
+            let piano = document.getElementById('piano-multidisciplinare');
 
-            let boxPunti = document.getElementById('box-punteggio');
-            let boxPiano = document.getElementById('box-piano');
-            let boxConsigli = document.getElementById('box-consigli');
-
-            // Controllo se i campi della scala BSA non sono ancora stati compilati del tutto
-            if(b1===""||b2===""||b3===""||b4===""||b5===""||b6===""||b7===""||b8===""||b9==="") {
-                boxPunti.innerHTML = "<span style='color:#c62828;'>Dati Incompleti</span>";
-                boxPiano.innerHTML = "Attenzione: Assicurati di aver completato tutte le risposte all'interno della scheda BSA Scale prima di verificare l'esito.";
-                boxConsigli.innerHTML = "Compila interamente i moduli per ricevere i consigli personalizzati.";
-                switchTab('esito');
-                return;
-            }
-
-            let bsaTotale = parseInt(b1)+parseInt(b2)+parseInt(b3)+parseInt(b4)+parseInt(b5)+parseInt(b6)+parseInt(b7)+parseInt(b8)+parseInt(b9);
-
-            // Generazione output dinamico e coerente
-            boxPunti.innerHTML = "Punteggio BSA Bedside: " + bsaTotale + " / 10 Punti<br><span style='font-size:13px; font-weight:normal; color:#555;'>Carico di Rischio Chirurgico-Clinico: " + rischioTotale + " Punti</span>";
-
-            if (bsaTotale < 10) {
-                boxPiano.innerHTML = "<strong>CRITICITÀ RILEVATA - SOSPETTA DISFAGIA:</strong><br>Il paziente non ha ottenuto il punteggio pieno alla valutazione Bedside. Porre immediato <strong>NPO (Nulla per os)</strong>. Richiedere una consulenza logopedica urgente entro le 24 ore per esecuzione di valutazione strumentale (FEES/VFS). Ripetere il monitoraggio dei parametri respiratori.";
-                boxConsigli.innerHTML = "Mantenere il paziente a digiuno da cibi e liquidi. Non somministrare farmaci per via orale fino a nuova indicazione medica. Favorire una postura del tronco sollevata a 90° anche durante il riposo a letto.";
+            if(tot <= 1) {
+                box.style.background = "#28a745"; // VERDE
+                box.innerText = "RISCHIO LIEVE";
+                piano.innerHTML = "<strong>Piano Multidisciplinare:</strong><br>• Monitoraggio clinico routinario.";
+            } else if(tot <= 3) {
+                box.style.background = "#ffc107"; // GIALLO
+                box.style.color = "#000";
+                box.innerText = "RISCHIO MODERATO";
+                piano.innerHTML = "<strong>Piano Multidisciplinare:</strong><br>• <strong>Neurochirurgo:</strong> Follow-up.<br>• <strong>Logopedista:</strong> Valutazione precauzionale.";
             } else {
-                boxPiano.innerHTML = "<strong>VALUTAZIONE BSA SUPERATA (10/10):</strong><br>La funzionalità deglutitoria è clinicamente indenne. È possibile avviare lo svezzamento e l'alimentazione per via orale partendo da consistenze semiliquide/morbide sotto controllo infermieristico nelle prime somministrazioni. Monitorare l'insorgenza tardiva di fatigue.";
-                boxConsigli.innerHTML = "Iniziare l'alimentazione con piccoli bocconi o sorsi concentrati. Evitare distrazioni ambientali durante i pasti e prediligere un ambiente calmo. Mantenere la posizione seduta per almeno 30 minuti dopo il termine del pasto.";
+                box.style.background = "#dc3545"; // ROSSO
+                box.innerText = "RISCHIO ELEVATO";
+                piano.innerHTML = "<strong>Piano Multidisciplinare Integrato:</strong><br>• <strong>Neurochirurgo:</strong> Urgenza chirurgica.<br>• <strong>Logopedista:</strong> Presa in carico immediata.<br>• <strong>ORL:</strong> Videofibrolaringoscopia prioritaria.";
             }
-
             switchTab('esito');
         }
 
-        // Reset completo di tutti gli elementi
         function resetForm() {
-            document.querySelectorAll('select').forEach(sel => sel.value = "");
-            document.getElementById('box-punteggio').innerHTML = "In attesa del calcolo dei dati...";
-            document.getElementById('box-piano').innerHTML = "Compila tutti i campi dei precedenti passaggi per visualizzare le indicazioni cliniche dettagliate per l'équipe.";
-            document.getElementById('box-consigli').innerHTML = "Linee guida pratiche post-operatorie fornite sulla base della valutazione eseguita.";
+            document.querySelectorAll('select').forEach(s => s.value = "");
             switchTab('predisponenti');
         }
     </script>
