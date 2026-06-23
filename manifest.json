@@ -1,0 +1,9 @@
+{
+  "name": "Neurofeed App",
+  "short_name": "Neurofeed",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#004a99",
+  "theme_color": "#004a99",
+  "orientation": "portrait"
+}
