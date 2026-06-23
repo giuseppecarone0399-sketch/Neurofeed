@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Neurofeed App – Awake Surgery</title>
+    <title>Neurofeed</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧠%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <style>
         :root { --p: #004a99; --s: #00d4ff; --bg: #f4f7f6; --w: #ffffff; --t: #333333; --g: #666666; --border: #e0e0e0; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--t); line-height: 1.5; padding-bottom: 70px; }
-        .app-title-container { background: var(--w); padding: 15px; text-align: left; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-        .app-title-container i { font-size: 24px; color: var(--p); }
-        .app-title-container h1 { font-size: 18px; font-weight: 700; color: var(--p); }
-        .top-nav { position: sticky; top: 0; z-index: 100; display: flex; background: var(--p); overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch; }
+        
+        /* Testata Blu con Scritta Neurofeed e Cervello Stilizzato */
+        .app-title-container { background: var(--p); padding: 18px 15px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .app-title-container i { font-size: 24px; color: var(--w); }
+        .app-title-container h1 { font-size: 22px; font-weight: 700; color: var(--w); letter-spacing: 0.5px; }
+        
+        /* Barra di navigazione con le sezioni selezionabili */
+        .top-nav { position: sticky; top: 0; z-index: 100; display: flex; background: #003b7a; overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch; border-top: 1px solid rgba(255,255,255,0.1); }
         .top-nav::-webkit-scrollbar { display: none; }
         .nav-item { flex: 1; min-width: 75px; padding: 12px 5px; text-align: center; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; border-bottom: 3px solid transparent; }
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--w); background: rgba(255,255,255,0.1); border-bottom-color: var(--s); font-weight: bold; }
+        
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s ease; }
@@ -25,24 +30,23 @@
         .card { background: var(--w); border-radius: 12px; padding: 16px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border); }
         .card h2 { font-size: 16px; color: var(--p); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f0f0f0; padding-bottom: 6px; }
         .form-group { margin-bottom: 14px; }
-        .form-group:last-child { margin-bottom: 0; }
         label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #444; }
-        select, input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background-color: var(--w); color: var(--t); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
-        select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 35px; }
-        select:focus, input:focus { border-color: var(--p); }
+        select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background-color: var(--w); color: var(--t); outline: none; transition: border-color 0.2s; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 35px; }
+        select:focus { border-color: var(--p); }
         .btn-next { background: var(--p); color: var(--w); border: none; width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,74,153,0.2); }
-        .btn-next:active { opacity: 0.9; transform: scale(0.99); }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
-        .summary-row:last-child { border-bottom: none; }
-        .summary-label { color: var(--g); }
         .summary-value { font-weight: 600; color: var(--t); }
+        .section-subtitle { font-size: 12px; font-weight: bold; color: var(--g); margin: 15px 0 8px 0; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; }
     </style>
 </head>
 <body>
+    <!-- SOPRA: Testata blu con icona cervello stilizzato e solo scritto Neurofeed -->
     <div class="app-title-container">
-        <i>🧠</i>
-        <h1>Neurofeed - Awake Surgery</h1>
+        <i class="fa-solid fa-brain"></i>
+        <h1>Neurofeed</h1>
     </div>
+
+    <!-- BARRA CON LE VARIE SEZIONI SELEZIONABILI (MANTENUTA) -->
     <div class="top-nav">
         <a href="#" class="nav-item active" onclick="switchTab('predisponenti', this)"><i class="fa-solid fa-history"></i><span>Predisponenti</span></a>
         <a href="#" class="nav-item" onclick="switchTab('preop', this)"><i class="fa-solid fa-folder-plus"></i><span>Pre-Op</span></a>
@@ -50,7 +54,9 @@
         <a href="#" class="nav-item" onclick="switchTab('bsa', this)"><i class="fa-solid fa-utensils"></i><span>BSA Scale</span></a>
         <a href="#" class="nav-item" onclick="switchTab('esito', this)"><i class="fa-solid fa-poll-h"></i><span>Esito</span></a>
     </div>
+
     <div class="container">
+        <!-- SEZIONE PREDISPONENTI -->
         <div id="predisponenti" class="section active">
             <div class="card">
                 <h2><i class="fa-solid fa-user"></i> Dati Predisponenti del Paziente</h2>
@@ -74,6 +80,7 @@
             <button class="btn-next" onclick="goToTab('preop')">PROSSIMO: SEZIONE PREOPERATORIO <i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
+        <!-- SEZIONE PREOPERATORIO -->
         <div id="preop" class="section">
             <div class="card">
                 <h2><i class="fa-solid fa-clipboard-check"></i> Valutazione Preoperatoria</h2>
@@ -93,6 +100,7 @@
             <button class="btn-next" onclick="goToTab('postop')">PROSSIMO: SEZIONE POSTOPERATORIO <i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
+        <!-- SEZIONE POSTOPERATORIO -->
         <div id="postop" class="section">
             <div class="card">
                 <h2><i class="fa-solid fa-notes-medical"></i> Monitoraggio Postoperatorio</h2>
@@ -109,36 +117,59 @@
                     <select id="crisi"><option value="">-- Seleziona un'opzione --</option><option>Nessuna crisi</option><option>Crisi focale risolta spontaneamente</option><option>Crisi generalizzata / Stato di male</option></select>
                 </div>
             </div>
-            <button class="btn-next" onclick="goToTab('bsa')">PROSSIMO: BEDSIDE SWALLOW ASSESSMENT <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-next" onclick="goToTab('bsa')">PROSSIMO: BSA SCALE <i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
+        <!-- SEZIONE BSA SCALE - DA IMMAGINE_10.PNG CON CELLE SVUOTATE -->
         <div id="bsa" class="section">
             <div class="card">
                 <h2><i class="fa-solid fa-utensils"></i> Bedside Swallow Assessment (BSA)</h2>
+                
                 <div class="form-group">
-                    <label>Stato di vigilanza / Livello di coscienza:</label>
-                    <select id="bsa_vigilanza"><option value="">-- Seleziona un'opzione --</option><option>Sveglio e collaborante</option><option>Letargico / Sonnolento</option><option>Stupor / Non collaborante</option></select>
+                    <label>Livello di coscienza:</label>
+                    <select id="bsa_coscienza"><option value="">-- Seleziona un'opzione --</option><option value="1">Vigile (Punti: 1)</option><option value="0">Non vigile (Punti: 0)</option></select>
                 </div>
                 <div class="form-group">
-                    <label>Controllo volontario della tosse o schiarimento gola:</label>
-                    <select id="bsa_tosse"><option value="">-- Seleziona un'opzione --</option><option>Presente e vigorosa</option><option>Debole / Inefficace</option><option>Assente</option></select>
+                    <label>Controllo del tronco e della testa:</label>
+                    <select id="bsa_tronco"><option value="">-- Seleziona un'opzione --</option><option value="1">Tronco normale (Punti: 1)</option><option value="0">Deficitario (Punti: 0)</option></select>
                 </div>
                 <div class="form-group">
-                    <label>Deglutizione della saliva spontanea / Controllo secrezioni:</label>
-                    <select id="bsa_saliva"><option value="">-- Seleziona un'opzione --</option><option>Normale / Nessun ristagno</option><option>Scialorrea / Ristagno lieve</option><option>Incapacità di gestire la saliva</option></select>
+                    <label>Chiusura delle labbra:</label>
+                    <select id="bsa_labbra"><option value="">-- Seleziona un'opzione --</option><option value="1">Normale (Punti: 1)</option><option value="0">Incompleta (Punti: 0)</option></select>
                 </div>
                 <div class="form-group">
-                    <label>Test dei 3 cucchiaini d'acqua (5ml ciascuno):</label>
-                    <select id="bsa_cucchiai"><option value="">-- Seleziona un'opzione --</option><option>Nessun sintomo (Superato)</option><option>Presenza di tosse o voce umida</option><option>Incapacità di deglutire / Rifiuto</option></select>
+                    <label>Riflesso della tosse:</label>
+                    <select id="bsa_tosse"><option value="">-- Seleziona un'opzione --</option><option value="1">Normale (Punti: 1)</option><option value="0">Assente/Debole (Punti: 0)</option></select>
+                </div>
+
+                <div class="section-subtitle">Stadio 1: Prova del Cucchiaino (3x 5ml Acqua)</div>
+                <div class="form-group">
+                    <label>Tosse durante la deglutizione al cucchiaino:</label>
+                    <select id="bsa_tosse_cuc"><option value="">-- Seleziona un'opzione --</option><option value="1">Mai o una volta (Punti: 1)</option><option value="0">Sì / Più volte (Punti: 0)</option></select>
                 </div>
                 <div class="form-group">
-                    <label>Test del bicchiere d'acqua (60ml):</label>
-                    <select id="bsa_bicchiere"><option value="">-- Seleziona un'opzione --</option><option>Superato senza interruzioni o tosse</option><option>Superato ma con tosse ritardata / voce alterata</option><option>Fallito (Tosse immediata, soffocamento o stridore)</option></select>
+                    <label>Gorgoglio dopo la deglutizione (Voce umida):</label>
+                    <select id="bsa_gorgoglio"><option value="">-- Seleziona un'opzione --</option><option value="2">No (Punti: 2)</option><option value="0">Sì (Punti: 0)</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Funzione laringea dopo la deglutizione:</label>
+                    <select id="bsa_laringe"><option value="">-- Seleziona un'opzione --</option><option value="1">Normale (Punti: 1)</option><option value="0">Alterata (Punti: 0)</option></select>
+                </div>
+
+                <div class="section-subtitle">Stadio 2: Prova con Bicchiere (60ml Acqua)</div>
+                <div class="form-group">
+                    <label>È in grado di terminare la prova al bicchiere?</label>
+                    <select id="bsa_bicchiere_term"><option value="">-- Seleziona un'opzione --</option><option value="1">Sì (Punti: 1)</option><option value="0">No (Punti: 0)</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Tosse durante o dopo il bicchiere:</label>
+                    <select id="bsa_tosse_bic"><option value="">-- Seleziona un'opzione --</option><option value="1">No (Punti: 1)</option><option value="0">Sì (Punti: 0)</option></select>
                 </div>
             </div>
-            <button class="btn-next" onclick="generaEsito()">GENERA ESITO CLINICO <i class="fa-solid fa-square-poll-vertical"></i></button>
+            <button class="btn-next" onclick="generaEsito()">GENERA ESITO FINALE <i class="fa-solid fa-square-poll-vertical"></i></button>
         </div>
 
+        <!-- SEZIONE ESITO -->
         <div id="esito" class="section">
             <div class="card">
                 <h2><i class="fa-solid fa-square-poll-horizontal"></i> Riepilogo ed Esito Clinico</h2>
@@ -146,7 +177,7 @@
                 <div class="summary-row"><span class="summary-label">Comorbilità / Lesione:</span><span class="summary-value" id="res-clinica">-</span></div>
                 <div class="summary-row"><span class="summary-label">Stato Cognitivo (Pre):</span><span class="summary-value" id="res-pre">-</span></div>
                 <div class="summary-row"><span class="summary-label">Complicanze Post-Op:</span><span class="summary-value" id="res-post">-</span></div>
-                <div class="summary-row"><span class="summary-label">Valutazione Disfagia (BSA):</span><span class="summary-value" id="res-bsa">-</span></div>
+                <div class="summary-row"><span class="summary-label">Punteggio Totale BSA:</span><span class="summary-value" id="res-bsa">-</span></div>
                 <div class="form-group" style="margin-top:15px;">
                     <label style="color:var(--p); font-weight:bold;">Profilo di Rischio Clinico / Raccomandazioni:</label>
                     <div id="valutazione-finale" style="padding:12px; border-radius:8px; background:#f0f4f8; font-weight:bold; font-size:14px; text-align:center; border-left:5px solid var(--p);">Compila i dati per generare il profilo</div>
@@ -182,37 +213,38 @@
             let ponv = document.getElementById('ponv').value || "-";
             let crisi = document.getElementById('crisi').value || "-";
             
-            let bsa_vig = document.getElementById('bsa_vigilanza').value;
-            let bsa_tos = document.getElementById('bsa_tosse').value;
-            let bsa_sal = document.getElementById('bsa_saliva').value;
-            let bsa_cuc = document.getElementById('bsa_cucchiai').value;
-            let bsa_bic = document.getElementById('bsa_bicchiere').value;
+            let c1 = document.getElementById('bsa_coscienza').value;
+            let c2 = document.getElementById('bsa_tronco').value;
+            let c3 = document.getElementById('bsa_labbra').value;
+            let c4 = document.getElementById('bsa_tosse').value;
+            let c5 = document.getElementById('bsa_tosse_cuc').value;
+            let c6 = document.getElementById('bsa_gorgoglio').value;
+            let c7 = document.getElementById('bsa_laringe').value;
+            let c8 = document.getElementById('bsa_bicchiere_term').value;
+            let c9 = document.getElementById('bsa_tosse_bic').value;
 
             document.getElementById('res-paziente').innerText = eta + " / " + sesso;
             document.getElementById('res-clinica').innerText = com + " | " + les;
             document.getElementById('res-pre').innerText = "MMSE: " + mmse + " | Ansia: " + ansia;
             document.getElementById('res-post').innerText = "Dolore: " + nrs + " | Crisi: " + crisi;
 
-            let isDisfagico = (bsa_vig.includes("Letargico") || bsa_vig.includes("Stupor") || 
-                               bsa_tos.includes("Debole") || bsa_tos.includes("Assente") || 
-                               bsa_sal.includes("Ristagno") || bsa_sal.includes("Incapacità") || 
-                               bsa_cuc.includes("Presenza") || bsa_cuc.includes("Incapacità") || 
-                               bsa_bic.includes("ritardata") || bsa_bic.includes("Fallito"));
-
             let VF = document.getElementById('valutazione-finale');
             
-            if (!bsa_vig || !bsa_tos || !bsa_sal || !bsa_cuc || !bsa_bic) {
+            if (!c1 || !c2 || !c3 || !c4 || !c5 || !c6 || !c7 || !c8 || !c9) {
                 document.getElementById('res-bsa').innerText = "Valutazione Incompleta";
                 VF.innerText = "ATTENZIONE: Compila tutti i campi della BSA per calcolare l'esito.";
                 VF.style.background = "#fff3e0"; VF.style.color = "#ef6c00"; VF.style.borderLeftColor = "#ef6c00";
-            } else if (isDisfagico) {
-                document.getElementById('res-bsa').innerText = "SEGNI DI DISFAGIA RILEVATI";
-                VF.innerText = "RISCHIO ELEVATO: Sospendere alimentazione per os. Richiesta valutazione logopedica formale e nutrizione alternativa.";
-                VF.style.background = "#ffebee"; VF.style.color = "#c62828"; VF.style.borderLeftColor = "#c62828";
             } else {
-                document.getElementById('res-bsa').innerText = "BSA Superata (Normale)";
-                VF.innerText = "RISCHIO BASSO: Funzione deglutitoria indenne. Possibile procedere con svezzamento idrico/alimentare standard.";
-                VF.style.background = "#e8f5e9"; VF.style.color = "#2e7d32"; VF.style.borderLeftColor = "#2e7d32";
+                let tot = parseInt(c1) + parseInt(c2) + parseInt(c3) + parseInt(c4) + parseInt(c5) + parseInt(c6) + parseInt(c7) + parseInt(c8) + parseInt(c9);
+                document.getElementById('res-bsa').innerText = tot + " / 10 Punti";
+                
+                if (tot < 10) {
+                    VF.innerText = "SEGNI DI DISFAGIA RILEVATI (Score: " + tot + "/10). Sospendere alimentazione orale. Richiesta valutazione logopedica.";
+                    VF.style.background = "#ffebee"; VF.style.color = "#c62828"; VF.style.borderLeftColor = "#c62828";
+                } else {
+                    VF.innerText = "BSA SUPERATA (Score: 10/10). Funzione deglutitoria indenne. Possibile procedere con svezzamento standard.";
+                    VF.style.background = "#e8f5e9"; VF.style.color = "#2e7d32"; VF.style.borderLeftColor = "#2e7d32";
+                }
             }
             goToTab('esito');
         }
