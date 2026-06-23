@@ -32,7 +32,6 @@
         select:focus, input:focus { border-color: var(--p); }
         .btn-next { background: var(--p); color: var(--w); border: none; width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,74,153,0.2); }
         .btn-next:active { opacity: 0.9; transform: scale(0.99); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
         .summary-row:last-child { border-bottom: none; }
         .summary-label { color: var(--g); }
@@ -41,7 +40,7 @@
 </head>
 <body>
     <div class="app-title-container">
-        <i class="fa-solid : font-size: 24px; color: var(--p);">🧠</i>
+        <i>🧠</i>
         <h1>Neurofeed - Awake Surgery</h1>
     </div>
     <div class="top-nav">
@@ -110,26 +109,34 @@
                     <select id="crisi"><option value="">-- Seleziona un'opzione --</option><option>Nessuna crisi</option><option>Crisi focale risolta spontaneamente</option><option>Crisi generalizzata / Stato di male</option></select>
                 </div>
             </div>
-            <button class="btn-next" onclick="goToTab('bsa')">PROSSIMO: SCALA BSA <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-next" onclick="goToTab('bsa')">PROSSIMO: BEDSIDE SWALLOW ASSESSMENT <i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
         <div id="bsa" class="section">
             <div class="card">
-                <h2><i class="fa-solid fa-star"></i> Scala di Valutazione BSA</h2>
-                <div class="grid-2">
-                    <div class="form-group"><label>Sintomi Cognitivi:</label><input type="number" id="bsa1" placeholder="0-3" min="0" max="3" oninput="calcolaBSA()" /></div>
-                    <div class="form-group"><label>Stato Emotivo:</label><input type="number" id="bsa2" placeholder="0-3" min="0" max="3" oninput="calcolaBSA()" /></div>
+                <h2><i class="fa-solid fa-utensils"></i> Bedside Swallow Assessment (BSA)</h2>
+                <div class="form-group">
+                    <label>Stato di vigilanza / Livello di coscienza:</label>
+                    <select id="bsa_vigilanza"><option value="">-- Seleziona un'opzione --</option><option>Sveglio e collaborante</option><option>Letargico / Sonnolento</option><option>Stupor / Non collaborante</option></select>
                 </div>
-                <div class="grid-2" style="margin-top:10px;">
-                    <div class="form-group"><label>Deficit Motori:</label><input type="number" id="bsa3" placeholder="0-3" min="0" max="3" oninput="calcolaBSA()" /></div>
-                    <div class="form-group"><label>Collaborazione:</label><input type="number" id="bsa4" placeholder="0-3" min="0" max="3" oninput="calcolaBSA()" /></div>
+                <div class="form-group">
+                    <label>Controllo volontario della tosse o schiarimento gola:</label>
+                    <select id="bsa_tosse"><option value="">-- Seleziona un'opzione --</option><option>Presente e vigorosa</option><option>Debole / Inefficace</option><option>Assente</option></select>
                 </div>
-                <div class="summary-row" style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
-                    <span class="summary-label" style="font-weight:bold; color:var(--p);">PUNTEGGIO TOTALE BSA:</span>
-                    <span class="summary-value" id="bsa-totale" style="color:var(--p); font-size:16px;">0 / 12</span>
+                <div class="form-group">
+                    <label>Deglutizione della saliva spontanea / Controllo secrezioni:</label>
+                    <select id="bsa_saliva"><option value="">-- Seleziona un'opzione --</option><option>Normale / Nessun ristagno</option><option>Scialorrea / Ristagno lieve</option><option>Incapacità di gestire la saliva</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Test dei 3 cucchiaini d'acqua (5ml ciascuno):</label>
+                    <select id="bsa_cucchiai"><option value="">-- Seleziona un'opzione --</option><option>Nessun sintomo (Superato)</option><option>Presenza di tosse o voce umida</option><option>Incapacità di deglutire / Rifiuto</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Test del bicchiere d'acqua (60ml):</label>
+                    <select id="bsa_bicchiere"><option value="">-- Seleziona un'opzione --</option><option>Superato senza interruzioni o tosse</option><option>Superato ma con tosse ritardata / voce alterata</option><option>Fallito (Tosse immediata, soffocamento o stridore)</option></select>
                 </div>
             </div>
-            <button class="btn-next" onclick="generaEsito()">GENERA ESITO FINALE <i class="fa-solid fa-square-poll-vertical"></i></button>
+            <button class="btn-next" onclick="generaEsito()">GENERA ESITO CLINICO <i class="fa-solid fa-square-poll-vertical"></i></button>
         </div>
 
         <div id="esito" class="section">
@@ -139,9 +146,9 @@
                 <div class="summary-row"><span class="summary-label">Comorbilità / Lesione:</span><span class="summary-value" id="res-clinica">-</span></div>
                 <div class="summary-row"><span class="summary-label">Stato Cognitivo (Pre):</span><span class="summary-value" id="res-pre">-</span></div>
                 <div class="summary-row"><span class="summary-label">Complicanze Post-Op:</span><span class="summary-value" id="res-post">-</span></div>
-                <div class="summary-row"><span class="summary-label">Score Scala BSA:</span><span class="summary-value" id="res-bsa">-</span></div>
+                <div class="summary-row"><span class="summary-label">Valutazione Disfagia (BSA):</span><span class="summary-value" id="res-bsa">-</span></div>
                 <div class="form-group" style="margin-top:15px;">
-                    <label style="color:var(--p); font-weight:bold;">Profilo di Rischio Delirium / Complicanze:</label>
+                    <label style="color:var(--p); font-weight:bold;">Profilo di Rischio Clinico / Raccomandazioni:</label>
                     <div id="valutazione-finale" style="padding:12px; border-radius:8px; background:#f0f4f8; font-weight:bold; font-size:14px; text-align:center; border-left:5px solid var(--p);">Compila i dati per generare il profilo</div>
                 </div>
             </div>
@@ -163,15 +170,6 @@
             window.scrollTo(0,0);
         }
         function goToTab(tabId) { switchTab(tabId, null); }
-        function calcolaBSA() {
-            let v1 = parseInt(document.getElementById('bsa1').value) || 0;
-            let v2 = parseInt(document.getElementById('bsa2').value) || 0;
-            let v3 = parseInt(document.getElementById('bsa3').value) || 0;
-            let v4 = parseInt(document.getElementById('bsa4').value) || 0;
-            let tot = v1 + v2 + v3 + v4;
-            document.getElementById('bsa-totale').innerText = tot + " / 12";
-            return tot;
-        }
         function generaEsito() {
             let eta = document.getElementById('eta').value || "-";
             let sesso = document.getElementById('sesso').value || "-";
@@ -183,23 +181,37 @@
             let nrs = document.getElementById('nrs').value || "-";
             let ponv = document.getElementById('ponv').value || "-";
             let crisi = document.getElementById('crisi').value || "-";
-            let bsa = calcolaBSA();
+            
+            let bsa_vig = document.getElementById('bsa_vigilanza').value;
+            let bsa_tos = document.getElementById('bsa_tosse').value;
+            let bsa_sal = document.getElementById('bsa_saliva').value;
+            let bsa_cuc = document.getElementById('bsa_cucchiai').value;
+            let bsa_bic = document.getElementById('bsa_bicchiere').value;
 
             document.getElementById('res-paziente').innerText = eta + " / " + sesso;
             document.getElementById('res-clinica').innerText = com + " | " + les;
             document.getElementById('res-pre').innerText = "MMSE: " + mmse + " | Ansia: " + ansia;
             document.getElementById('res-post').innerText = "Dolore: " + nrs + " | Crisi: " + crisi;
-            document.getElementById('res-bsa').innerText = bsa + " / 12 punti";
+
+            let isDisfagico = (bsa_vig.includes("Letargico") || bsa_vig.includes("Stupor") || 
+                               bsa_tos.includes("Debole") || bsa_tos.includes("Assente") || 
+                               bsa_sal.includes("Ristagno") || bsa_sal.includes("Incapacità") || 
+                               bsa_cuc.includes("Presenza") || bsa_cuc.includes("Incapacità") || 
+                               bsa_bic.includes("ritardata") || bsa_bic.includes("Fallito"));
 
             let VF = document.getElementById('valutazione-finale');
-            if (bsa >= 7 || eta === "≥ 65 anni" || crisi.includes("Grave") || mmse.includes("moderato")) {
-                VF.innerText = "RISCHIO ELEVATO: Richiesto monitoraggio stretto e protocollo preventivo delirium.";
-                VF.style.background = "#ffebee"; VF.style.color = "#c62828"; VF.style.borderLeftColor = "#c62828";
-            } else if (bsa >= 3 || ansia.includes("Moderato") || nrs.includes("Moderato")) {
-                VF.innerText = "RISCHIO MODERATO: Monitoraggio clinico regolare e controllo ottimale del dolore.";
+            
+            if (!bsa_vig || !bsa_tos || !bsa_sal || !bsa_cuc || !bsa_bic) {
+                document.getElementById('res-bsa').innerText = "Valutazione Incompleta";
+                VF.innerText = "ATTENZIONE: Compila tutti i campi della BSA per calcolare l'esito.";
                 VF.style.background = "#fff3e0"; VF.style.color = "#ef6c00"; VF.style.borderLeftColor = "#ef6c00";
+            } else if (isDisfagico) {
+                document.getElementById('res-bsa').innerText = "SEGNI DI DISFAGIA RILEVATI";
+                VF.innerText = "RISCHIO ELEVATO: Sospendere alimentazione per os. Richiesta valutazione logopedica formale e nutrizione alternativa.";
+                VF.style.background = "#ffebee"; VF.style.color = "#c62828"; VF.style.borderLeftColor = "#c62828";
             } else {
-                VF.innerText = "RISCHIO BASSO: Decorso regolare. Continuare monitoraggio standard.";
+                document.getElementById('res-bsa').innerText = "BSA Superata (Normale)";
+                VF.innerText = "RISCHIO BASSO: Funzione deglutitoria indenne. Possibile procedere con svezzamento idrico/alimentare standard.";
                 VF.style.background = "#e8f5e9"; VF.style.color = "#2e7d32"; VF.style.borderLeftColor = "#2e7d32";
             }
             goToTab('esito');
