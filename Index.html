@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Neurofeed App - Awake Surgery Protocol</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- TRUCCO: Il manifest è inserito direttamente dentro il codice così il telefono non si confonde -->
+    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Neurofeed%20App%22%2C%22short_name%22%3A%22Neurofeed%22%2C%22start_url%22%3A%22index.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23004a99%22%2C%22theme_color%22%3A%22%23004a99%22%2C%22orientation%22%3A%22portrait%22%7D" />
+    <style>
+      :root { --p: #004a99; --s: #00d4ff; --bg: #f4f7f9; --txt: #333; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--txt); }
+        .app-title-container { background: var(--p); text-align: center; padding: 12px 0 2px 0; color: white; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .app-title-container h1 { margin: 0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px; }
+        .app-title-container i { font-size: 18px; color: var(--s); }
+        .top-nav { position: sticky; top: 0; background: var(--p); display: flex; padding: 10px 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .nav-item { color: rgba(255,255,255,0.5); text-align: center; font-size: 8px; flex: 1; cursor: pointer; }
+        .nav-item i { font-size: 16px; display: block; margin-bottom: 2px; }
+        .nav-item.active { color: white; font-weight: bold; }
+        .page { display: none; padding: 15px; min-height: 85vh; }
+        .page.active { display: block; }
+        .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        h2 { color: var(--p); font-size: 16px; margin: 0 0 15px 0; border-bottom: 1px solid #eee; padding-bottom: 8px; font-weight: 700; text-transform: uppercase; }
+        h3 { color: #555; font-size: 13px; margin: 15px 0 5px 0; font-weight: bold; }
+        label { display: block; margin: 12px 0 5px; font-weight: 600; font-size: 13px; color: #444; }
+        select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; background: #fff; color: #333; }
+        .btn-next { background: var(--p); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: bold; margin-top: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .risk-res { padding: 15px; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 15px 0; display: none; font-size: 15px; }
+        .cloud-info { background: #eef6ff; padding: 12px 15px; border-radius: 20px; font-size: 13px; color: #1e4273; border: 1px dashed #b3d4fc; position: relative; margin: 15px 0; line-height: 1.4; }
+        .cloud-info::after { content: ''; position: absolute; bottom: -10px; left: 30px; border-width: 10px 10px 0; border-style: solid; border-color: #eef6ff transparent; display: block; width: 0; }
+        .multidisciplinary-box { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 12px; color: #14532d; }
+        .info-box { background: #f8fafc; padding: 10px; border-radius: 8px; font-size: 12px; border-left: 4px solid #64748b; margin-bottom: 15px; }
+    </style>
+  </head>
+  <body>
+    <div class="app-title-container"><i class="fa-solid fa-network-wired"></i><h1>NEUROFEED</h1></div>
+    <div class="top-nav">
+      <div class="nav-item active" id="n1" onclick="go(1)"><i class="fas fa-history"></i>Predisponenti</div>
+      <div class="nav-item" id="n2" onclick="go(2)"><i class="fas fa-notes-medical"></i>Pre-Op</div>
+      <div class="nav-item" id="n3" onclick="go(3)"><i class="fas fa-procedures"></i>Post-Op</div>
+      <div class="nav-item" id="n4" onclick="go(4)"><i class="fas fa-utensils"></i>BSA Scale</div>
+      <div class="nav-item" id="n5" onclick="go(5)"><i class="fas fa-poll-h"></i>Esito</div>
+    </div>
+
+    <div id="p1" class="page active">
+      <div class="card">
+        <h2>1. Fattori Predisponenti</h2>
+        <label>Età del paziente:</label>
+        <select id="fp_eta">
+          <option value="0">Inferiore a 65 anni</option>
+          <option value="1">Tra 65 e 75 anni</option>
+          <option value="2">Superiore a 75 anni</option>
+        </select>
+        <label>Comorbilità neurologiche:</label>
+        <select id="fp_comorbilita">
+          <option value="0">Nessuna</option>
+          <option value="1">Deficit pregressi</option>
+          <option value="2">Anamnesi positiva per disfagia</option>
+        </select>
+        <label>Sito della lesione cerebrale:</label>
+        <select id="fp_lesione">
+          <option value="0">Aree non eloquenti</option>
+          <option value="1">Aree fronto-temporali sinistre</option>
+          <option value="2">Tronco encefalico / aree caudali</option>
+        </select>
+      </div>
+      <button class="btn-next" onclick="go(2)">PROSSIMO <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <div id="p2" class="page">
+      <div class="card">
+        <h2>2. Valutazione Preoperatoria</h2>
+        <div class="multidisciplinary-box"><b>VALUTAZIONE MULTIDISCIPLINARE:</b> Neurochirurgo, Logopedista, ORL.</div>
+        <label>Stato deglutitorio basale:</label>
+        <select id="pre_deglutizione">
+          <option value="0">Normale</option>
+          <option value="2">Sospetto lieve disfagia</option>
+        </select>
+      </div>
+      <button class="btn-next" onclick="go(3)">PROSSIMO <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <div id="p3" class="page">
+      <div class="card">
+        <h2>3. Decorso Postoperatorio</h2>
+        <label>Presenza di edema peri-lesionale:</label>
+        <select id="post_edema">
+          <option value="0">Assente</option>
+          <option value="1">Moderato</option>
+          <option value="2">Grave edema / nuovo deficit</option>
+        </select>
+        <label>Livello di Fatigue post-chirurgica:</label>
+        <select id="post_fatigue">
+          <option value="0">Collaborante</option>
+          <option value="1">Lieve sopore</option>
+          <option value="2">Grave fatigue</option>
+        </select>
+      </div>
+      <button class="btn-next" onclick="go(4)">PROSSIMO <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <div id="p4" class="page">
+      <div class="card">
+        <h2>4. BSA Scale</h2>
+        <label>Livello di coscienza:</label>
+        <select id="bsa_coscienza"><option value="1">Vigile</option><option value="2">Soporoso</option></select>
+        <label>Controllo del tronco:</label>
+        <select id="bsa_tronco"><option value="1">Normale</option><option value="2">Deficitario</option></select>
+        <label>Chiusura delle labbra:</label>
+        <select id="bsa_labbra"><option value="1">Normale</option><option value="2">Patologica</option></select>
+        <label>Riflesso della tosse:</label>
+        <select id="bsa_tosse0"><option value="1">Normale</option><option value="2">Ridotto</option></select>
+        <label>Tosse al cucchiaino (3x 5ml):</label>
+        <select id="bsa_tosse1"><option value="1">Mai</option><option value="2">Più volte</option></select>
+        <label>Gorgoglio (Voce umida):</label>
+        <select id="bsa_gorgoglio1"><option value="2">No</option><option value="1">Sì</option></select>
+        <label>Funzione laringea:</label>
+        <select id="bsa_funzione1"><option value="1">Normale</option><option value="2">Disfonia</option></select>
+        <label>Termina prova bicchiere (60ml):</label>
+        <select id="bsa_termina2"><option value="1">Sì</option><option value="2">No</option></select>
+        <label>Tosse al bicchiere:</label>
+        <select id="bsa_tosse2"><option value="1">No</option><option value="2">Sì</option></select>
+      </div>
+      <button class="btn-next" onclick="calc()">CALCOLA ESITO</button>
+    </div>
+
+    <div id="p5" class="page">
+      <div id="rb" class="risk-res"></div>
+      <div class="card"><h2>Punteggio Totale</h2><p id="score_display"></p></div>
+      <div class="card"><h2>Piano Clinico</h2><div id="piano"></div></div>
+      <button class="btn-next" onclick="location.reload()">RESETTA</button>
+    </div>
+
+    <script>
+      function go(n) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('p'+n).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach((it, i) => it.classList.toggle('active', i === (n-1)));
+        window.scrollTo(0,0);
+      }
+      function calc() {
+        let tot = parseInt(document.getElementById('fp_eta').value) + parseInt(document.getElementById('fp_comorbilita').value) + parseInt(document.getElementById('fp_lesione').value) + parseInt(document.getElementById('pre_deglutizione').value) + parseInt(document.getElementById('post_edema').value) + parseInt(document.getElementById('post_fatigue').value) + parseInt(document.getElementById('bsa_coscienza').value) + parseInt(document.getElementById('bsa_tronco').value) + parseInt(document.getElementById('bsa_labbra').value) + parseInt(document.getElementById('bsa_tosse0').value) + parseInt(document.getElementById('bsa_tosse1').value) + parseInt(document.getElementById('bsa_gorgoglio1').value) + parseInt(document.getElementById('bsa_funzione1').value) + parseInt(document.getElementById('bsa_termina2').value) + parseInt(document.getElementById('bsa_tosse2').value);
+        let rb = document.getElementById('rb'); rb.style.display = 'block';
+        document.getElementById('score_display').innerText = tot + " Punti";
+        if (tot >= 22 || document.getElementById('bsa_tosse1').value === "2" || document.getElementById('bsa_tosse2').value === "2") {
+          rb.innerText = "RISCHIO ELEVATO"; rb.style.background = "#dc3545";
+          document.getElementById('piano').innerHTML = "<b>NPO ASSOLUTO.</b> Sospendere cibo e acqua. Valutazione urgente Neurochirurgo, Logopedista e ORL.";
+        } else if (tot >= 14) {
+          rb.innerText = "RISCHIO MEDIO"; rb.style.background = "#f39c12";
+          document.getElementById('piano').innerHTML = "<b>Alimentazione modificata.</b> Liquidi addensati e monitoraggio logopedico.";
+        } else {
+          rb.innerText = "RISCHIO BASSO"; rb.style.background = "#28a745";
+          document.getElementById('piano').innerHTML = "<b>Svezzamento orale libero.</b> Monitoraggio standard dell'equipe.";
+        }
+        go(5);
+      }
+    </script>
+  </body>
+</html>
