@@ -1,9 +1,24 @@
 {
-  "name": "Neurofeed App",
+  "name": "Neurofeed Awake Surgery",
   "short_name": "Neurofeed",
-  "start_url": "index.html",
+  "description": "Applicazione per il monitoraggio clinico in Awake Surgery",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#004a99",
+  "background_color": "#f4f7f6",
   "theme_color": "#004a99",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23004a99'/%3E%3Ctext y='72' x='10' font-size='75'%3E🧠%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23004a99'/%3E%3Ctext y='72' x='10' font-size='75'%3E🧠%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
